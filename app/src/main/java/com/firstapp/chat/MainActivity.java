@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         // Button
         Button btn = findViewById(R.id.button);
         btn.setOnClickListener(e -> handleText());
-        //
+        // yes
         textView = findViewById(R.id.textView);
         inputText = findViewById(R.id.inputText);
     }

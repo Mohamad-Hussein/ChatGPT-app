@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Chat</string>
+    <string name="title">Chat Bot</string>
+    <string name="defaultText">ask ChatGPT anything you want</string>
+    <string name="buttonText">Run</string>
+
 </resources>

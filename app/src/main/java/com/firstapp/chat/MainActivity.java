@@ -6,15 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,16 +47,22 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Button
-        inputText.setOnEditorActionListener(new OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    handleText(inputText.getText().toString(), pyobj);
-                    // to clear focus on Done button
-                    inputText.clearFocus();
-                    Log.d("tag", "ChatGPT loading response...");
-                }
-                return false;
+        inputText.setOnEditorActionListener((v, actionId, event) -> {
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                // to clear focus on Done button
+                inputText.clearFocus();
+
+                // log
+                Toast toast = Toast.makeText(MainActivity.this,"ChatGPT loading response...", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM| Gravity.CENTER_HORIZONTAL,0,0);
+                toast.show();
+                Log.d("tag", "ChatGPT loading response...");
+
+                // response
+                handleText(inputText.getText().toString(), pyobj);
+
             }
+            return false;
         });
 
         // to select all on focus
@@ -65,13 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     public void handleText(String input_text, PyObject pyobj) {
-        System.out.println(input_text);
+        Log.d("tag", input_text);
         PyObject result = pyobj.callAttr("main", input_text);
-        System.out.println("Got result");
+        Log.d("tag", "Got result");
         textView.setText(result.toString());
-        System.out.println("Button Clicked");
+        Log.d("tag", "Printed result");
 
     }
 }

@@ -4,12 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
@@ -25,10 +26,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Button
-        Button btn = findViewById(R.id.button);
-        btn.setOnClickListener(e -> handleText());
-
         // initializing
         textView = findViewById(R.id.textView);
         inputText = findViewById(R.id.inputText);
@@ -42,14 +39,31 @@ public class MainActivity extends AppCompatActivity {
         Python py = Python.getInstance();
 
         //now create python object
-        PyObject pyobj = py.getModule("main.py");
+        PyObject pyobj = py.getModule("python_script");
+
+
+        // Button
+        inputText.setOnEditorActionListener(new OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    handleText(inputText.getText().toString(), pyobj);
+                }
+                return false;
+            }
+        });
+
+        // Making the text scrollable
+        textView.setMovementMethod(new ScrollingMovementMethod());
 
     }
 
-    public void handleText() {
-        textView.setText(inputText.getText());
-        System.out.println("Button Clicked");
 
+    public void handleText(String input_text, PyObject pyobj) {
+        System.out.println(input_text);
+        PyObject result = pyobj.callAttr("main", input_text);
+        System.out.println("Got result");
+        textView.setText(result.toString());
+        System.out.println("Button Clicked");
 
     }
 }

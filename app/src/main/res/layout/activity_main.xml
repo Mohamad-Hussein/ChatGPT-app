@@ -23,6 +23,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.13" />
 
+
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"

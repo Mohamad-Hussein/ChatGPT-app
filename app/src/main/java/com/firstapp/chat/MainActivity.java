@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.textView);
         inputText = findViewById(R.id.inputText);
 
+
+
         // python initialization
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
@@ -47,10 +49,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     handleText(inputText.getText().toString(), pyobj);
+                    // to clear focus on Done button
+                    inputText.clearFocus();
+                    Log.d("tag", "ChatGPT loading response...");
                 }
                 return false;
             }
         });
+
+        // to select all on focus
+        inputText.setSelectAllOnFocus(true);
 
         // Making the text scrollable
         textView.setMovementMethod(new ScrollingMovementMethod());
